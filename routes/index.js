@@ -64,7 +64,7 @@ router.post("/file", upload, function (req, res, next) {
   datas.save((err, doc) => {
     if (err) throw err;
     console.log(doc);
-    const files = `https://shareeasy.onrender.com/show/${doc.dataname}`
+    const files = `https://shareeazy.onrender.com/show/${doc.dataname}`
     // const files = `http://localhost:3000/show/${doc.dataname}`;
     res.render("index", { title: "Express", name: files ,user:loginuser});
   });
