@@ -161,14 +161,17 @@ router.get('/email',(req,res)=>{
 })
 router.post('/email',async (req,res)=>{
   var loginuser=localStorage.getItem('loginuser');
-  const sender = req.body.sender;
+  // const sender = req.body.sender;
   const receiver = req.body.receiver;
+  var query = sign_data.findOne({ username:loginuser}).select('emails');
+  const gotemail = await query.exec();
+  const sender = gotemail.emails;
   // const files = `http://localhost:3000/show/${doc.dataname}`;
   const link = req.body.link;//console.log(link);
   const result = link.slice(36,link.length);//console.log(result);
   // const result = link.slice(27,link.length);//console.log(result);
   
-  var docs = data.findOne({ dataname: result }).select('datasize'); //selecting datasize field
+  var docs = data.findOne({ dataname: result }).select('datasize'); //selecting datasize fieldewn
   const gotfile = await docs.exec();// This helps to execute the query at a later time 
   const filesize = gotfile.datasize;// console.log(filesize);
   
@@ -177,9 +180,9 @@ router.post('/email',async (req,res)=>{
       from:sender,
       to:receiver,
       subject:"Share Easy File Sharing",
-      text:`${sender} shared a file with you.`,
+      text:`${loginuser} shared a file with you.`,
       html:require('./emailTemplate')({
-          emailFrom:sender,
+          emailFrom:loginuser,
           downloadLink:`${link}`,
           size:parseInt(filesize/1000)+' KB',
           expires:'15 minutes'
